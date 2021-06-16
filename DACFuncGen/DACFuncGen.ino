@@ -19,7 +19,7 @@ void loop() {
 
      PORTD = B11110000 & (rampCount << 4); 
      //place the lower nibble in the upper nibble of port D using a bit shift op
-    delay(2); 
+    delay(10); 
    //delayMicroseconds(151);  //hand adjusted delay that sets sample update rate
    // C 440 Hz is approximately 151 uS.
     -- rampCount;
