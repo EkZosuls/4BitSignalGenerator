@@ -10,8 +10,9 @@ byte signal1[ptsPerCycle] = {8, 15, 13, 7, 8, 2, 0};
 byte signal2[ptsPerCycle] = {8, 15, 13, 7, 8, 2, 0};
 byte rampCount = 8;
 
-void playArb(byte signa[], int cycles);
-void playRamp(void);
+void playArb(byte signa[], long cycles, int samPeriod);
+void playRamp(long nCycles);
+void printInstructions(void);
 
 void setup() {
 Serial.begin(9600);
@@ -19,9 +20,10 @@ DDRD = DDRD | B11110000;    //set digital pins D4-D7 as digital outputs
 pinMode(13, OUTPUT);
 digitalWrite(13, HIGH);
 PORTD = B11110000 & (rampCount << 4); 
-delay(2000);
+delay(20);
 digitalWrite(13, LOW);
 Serial.println("Arduino signal Generator for EK307");
+printInstructions();
 }
 
 void loop() {
@@ -35,41 +37,44 @@ void loop() {
         case '1':
           Serial.println("Signal 1");
           delay(100);
-          playArb(signal1, 1000);
+          playArb(signal1, 4000, 364);
+          printInstructions();
           break;
   
          case 'R':
            Serial.println("Ramp generator!");
            delay(100);
-           playRamp();
+           playRamp(100);
+           printInstructions();
            break;
   
          case '2':
            Serial.println("Signal 2");
-           playArb(signal2, 1000);
+           playArb(signal2, 4000, 728);
+           printInstructions();
            break;
       } //end of switchcase
   } //end of if Serial.avail...  
-Serial.println("input 1,2,R for a signal");
+
 } //end of looop
 
-void playArb(byte signa[], int cycles){
+void playArb(byte signa[], long cycles, int samPeriod){
   int circIndex = 0;
-  int endPoint = cycles * ptsPerCycle;
-  int point = 0;
+  long endPoint = cycles * ptsPerCycle;
+  long point = 0;
   while(point <= endPoint){
     PORTD = B11110000 & (signa[circIndex] << 4); 
-    delayMicroseconds(10);
+    delayMicroseconds(samPeriod);
     ++circIndex;
     circIndex = circIndex % (ptsPerCycle-1);
     ++ point;
   } //end of while(point...
 } //end of playArb
 
-void playRamp(void) {
-  byte rampCount = 8;
-  int endPoint = 8 * 10;
-  int point = 0;
+void playRamp(long nCycles) {
+  byte rampCount = 8; //start at offstted 'zero'
+  long endPoint = 16 * nCycles;
+  long point = 0;
     while(point <= endPoint){
       if (rampCount == 0)
       { rampCount = 16;
@@ -81,3 +86,7 @@ void playRamp(void) {
       ++ point;
     } //end of while(point...
 } //end of playRamp
+
+void printInstructions(void){
+  Serial.println("input 1,2,R for a signal");
+}
