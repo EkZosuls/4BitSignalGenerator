@@ -16,8 +16,8 @@ digitalWrite(13, LOW);
 
 void loop() {
   // put your main code here, to run repeatedly:
-      if (rampCount == 0)
-    { rampCount = 16;
+      if (rampCount == -1)
+    { rampCount = 15;
     }
      PORTD = B11110000 & (rampCount << 4); 
      //place the lower nibble in the upper nibble of port D using a bit shift op
