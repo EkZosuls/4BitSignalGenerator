@@ -3,13 +3,13 @@
 % Copyright 2021 Aleks Zosuls
 
 %sampleRate = 2000;
-ptsPerCycle = 7;
+ptsPerCycle = 8;
 A1 = 1;
 F1 = 110;
 A2 = .5;
 F2 = 2* F1;
-A3 = .2;
-F3 = 2* F2;
+A3 = .5;
+F3 = 3* F1;
 T = (0:ptsPerCycle-1)./(ptsPerCycle*F1);
 %T = (0:100-1)./(ptsPerCycle*F1);
 s1 = A1* sin(2*pi*F1*T);

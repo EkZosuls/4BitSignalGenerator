@@ -5,13 +5,16 @@
  *    //delayMicroseconds(151);  //hand adjusted delay that sets sample update rate
    // C 440 Hz is approximately 151 uS.
  */
-#define ptsPerCycle 7
-byte signal1[ptsPerCycle] = {8, 15, 13, 7, 8, 2, 0};
-byte signal2[ptsPerCycle] = {8, 15, 13, 7, 8, 2, 0};
+#define ptsPerCycle 8
+byte signal1[ptsPerCycle] = {8, 15, 14, 9, 7, 6, 1, 0};
+byte signal2[ptsPerCycle] = {8, 15, 10, 10, 8, 5, 5, 0};
+byte signal3[ptsPerCycle] = {8, 13, 15, 13, 8, 2, 0, 2};
 byte rampCount = 8;
+byte DC = 7;
 
 void playArb(byte signa[], long cycles, int samPeriod);
 void playRamp(long nCycles);
+void playPoint(byte sig);
 void printInstructions(void);
 
 void setup() {
@@ -19,7 +22,8 @@ Serial.begin(9600);
 DDRD = DDRD | B11110000;    //set digital pins D4-D7 as digital outputs
 pinMode(13, OUTPUT);
 digitalWrite(13, HIGH);
-PORTD = B11110000 & (rampCount << 4); 
+//PORTD = B11110000 & (rampCount << 4); 
+playPoint(DC);
 delay(20);
 digitalWrite(13, LOW);
 Serial.println("Arduino signal Generator for EK307");
@@ -38,6 +42,7 @@ void loop() {
           Serial.println("Signal 1");
           delay(100);
           playArb(signal1, 4000, 364);
+          playPoint(DC);
           printInstructions();
           break;
   
@@ -45,12 +50,35 @@ void loop() {
            Serial.println("Ramp generator!");
            delay(100);
            playRamp(100);
+           playPoint(DC);
            printInstructions();
            break;
   
          case '2':
            Serial.println("Signal 2");
-           playArb(signal2, 4000, 728);
+           playArb(signal2, 2000, 728);
+           playPoint(DC);
+           printInstructions();
+           break;
+
+         case '3':
+           Serial.println("Signal 3");
+           playArb(signal3, 700, 2900);
+           playPoint(DC);
+           printInstructions();
+           break;
+
+          case '4':
+           Serial.println("Signal 4");
+           playArb(signal3, 5000, 100);
+           playPoint(DC);
+           printInstructions();
+           break;
+
+          case '5':
+           Serial.println("Signal 4");
+           playArb(signal3, 10000, 50);
+           playPoint(DC);
            printInstructions();
            break;
       } //end of switchcase
@@ -66,7 +94,7 @@ void playArb(byte signa[], long cycles, int samPeriod){
     PORTD = B11110000 & (signa[circIndex] << 4); 
     delayMicroseconds(samPeriod);
     ++circIndex;
-    circIndex = circIndex % (ptsPerCycle-1);
+    circIndex = circIndex % (ptsPerCycle);
     ++ point;
   } //end of while(point...
 } //end of playArb
@@ -87,6 +115,9 @@ void playRamp(long nCycles) {
     } //end of while(point...
 } //end of playRamp
 
+void playPoint(byte sig){
+    PORTD = B11110000 & (sig << 4); 
+}
 void printInstructions(void){
   Serial.println("input 1,2,R for a signal");
 }
