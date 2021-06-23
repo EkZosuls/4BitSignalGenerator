@@ -63,21 +63,21 @@ void loop() {
 
          case '3':
            Serial.println("Signal 3");
-           playArb(signal3, 700, 2900);
+           playArb(signal3, 2000, 1000);
            playPoint(DC);
            printInstructions();
            break;
 
           case '4':
            Serial.println("Signal 4");
-           playArb(signal3, 5000, 100);
+           playArb(signal3, 20000, 100);
            playPoint(DC);
            printInstructions();
            break;
 
           case '5':
-           Serial.println("Signal 4");
-           playArb(signal3, 10000, 50);
+           Serial.println("Signal 5");
+           playArb(signal3, 40000, 50);
            playPoint(DC);
            printInstructions();
            break;
